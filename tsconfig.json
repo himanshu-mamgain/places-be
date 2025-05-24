@@ -3,6 +3,7 @@
     /* Language and Environment */
     "target": "ES2020",                         // Modern target for good performance and feature set
     "module": "commonjs",                       // Suitable for Node.js apps
+    "rootDir": "./src",
     "lib": ["ES2020"],                          // Includes modern JavaScript library types
     "esModuleInterop": true,                    // Enables compatibility with CommonJS
     "moduleResolution": "node",                 // Helps with resolving modules like Node.js
@@ -10,8 +11,9 @@
     "forceConsistentCasingInFileNames": true,   // Avoids file case issues
     "skipLibCheck": true,                       // Skips checking node_modules types
     "strict": true,                             // Enables all strict type checks
-    "noEmit": true                              // Disables emitting JS files; only typecheck
+    "noEmit": true,                              // Disables emitting JS files; only typecheck
+    "outDir": "./build"
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "build"]
 }
