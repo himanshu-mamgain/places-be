@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { NextFunction, Request, Response } from "express";
 import { IServiceResponse } from "../../utils/interface";
 
 export interface IPlaceService {
@@ -9,6 +10,18 @@ export interface IPlaceService {
   deletePlace(placeId: Types.ObjectId): Promise<IServiceResponse>;
 }
 
+export interface IPlaceController {
+  createPlace(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getPlaceById(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getPlacesByUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  updatePlace(req: Request, res: Response, next: NextFunction): Promise<void>;
+  deletePlace(req: Request, res: Response, next: NextFunction): Promise<void>;
+}
+
 export interface ICreatePlace {
   title: string;
   description: string;
@@ -17,7 +30,7 @@ export interface ICreatePlace {
 }
 
 export interface IUpdatePlace {
-    placeId: Types.ObjectId,
-    title: string;
-    description: string;
+  placeId: Types.ObjectId;
+  title: string;
+  description: string;
 }

@@ -31,3 +31,9 @@ export interface ICreateToken {
   name: string;
   email: string;
 }
+
+export interface IGetRequestUser {
+  id: Types.ObjectId;
+  name: string;
+  email: string;
+}
