@@ -24,18 +24,18 @@ const placeSchema = new mongoose.Schema({
   },
   location: {
     lat: {
-      type: String,
+      type: Number,
       required: true,
     },
     lng: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
   createdAt: {
-    type: String,
+    type: Date,
     required: false,
-    default: () => new Date().toString(),
+    default: () => new Date(),
   },
 });
 
