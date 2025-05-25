@@ -4,11 +4,17 @@ import { IServiceResponse } from "../../utils/interface";
 export interface IUserService {
   registerUser(payload: IRegisterUser): Promise<IServiceResponse>;
   loginUser(payload: ILoginUser): Promise<IServiceResponse>;
-  getAllUsersPlaces(): Promise<IServiceResponse>;
+  getAllUsers(): Promise<IServiceResponse>;
 }
 
 export interface IUserController {
-  getAllUsersPlaces(req: Request, res: Response, next: NextFunction): Promise<void>;
+  registerUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+  loginUser(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getAllUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }
 
 export interface IRegisterUser {

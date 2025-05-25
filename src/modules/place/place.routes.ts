@@ -33,7 +33,7 @@ router
     validatePayload(getPlaceByIdSchema),
     placeController.getPlaceById
   )
-  .put(
+  .patch(
     authorizer(),
     validatePayload(updatePlaceSchema),
     placeController.updatePlace

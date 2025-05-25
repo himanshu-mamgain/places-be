@@ -67,12 +67,12 @@ class UserService extends ResponseService implements IUserService {
     }
   };
 
-  getAllUsersPlaces = async (): Promise<IServiceResponse> => {
-    const userPlaces = await userModel.find({});
+  getAllUsers = async (): Promise<IServiceResponse> => {
+    const users = await userModel.find({});
 
     return this.serviceResponse(
       200,
-      userPlaces,
+      users,
       "Users places fetched successfully"
     );
   };

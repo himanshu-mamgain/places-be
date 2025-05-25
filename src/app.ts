@@ -25,7 +25,7 @@ class App {
   }
 
   configureRoutes() {
-    this.app.use("/api/v1", routes);
+    this.app.use("/api", routes);
     this.app.use("*", (_req: Request, _res: Response, next: NextFunction) => {
       return next(new NotFoundError("Route not found"));
     });

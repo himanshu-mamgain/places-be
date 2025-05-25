@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import ResponseService from "../../utils/response.handler";
-import { IUserController } from "./user.interface";
+import { ILoginUser, IRegisterUser, IUserController } from "./user.interface";
 import userService from "./user.service";
 
 class UserController extends ResponseService implements IUserController {
@@ -8,13 +8,47 @@ class UserController extends ResponseService implements IUserController {
     super();
   }
 
+  registerUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const data: IRegisterUser = req.payload;
+      const { message, payload, statusCode } = await this.service.registerUser(
+        data
+      );
+      this.sendResponse(res, statusCode, payload, message);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  loginUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const data: ILoginUser = req.payload;
+
+      const { message, payload, statusCode } = await this.service.loginUser(
+        data
+      );
+      this.sendResponse(res, statusCode, payload, message);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   getAllUsers = async (
     _: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
-      const { message, payload, statusCode } = await this.service.getAllUsers();
+      const { message, payload, statusCode } =
+        await this.service.getAllUsers();
       this.sendResponse(res, statusCode, payload, message);
     } catch (error) {
       next(error);
