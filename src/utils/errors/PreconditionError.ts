@@ -1,7 +1,7 @@
 import { CustomApiError } from "./CustomApiError";
 
-export class NotFoundError extends CustomApiError {
-  statusCode = 404;
+export class PreconditionError extends CustomApiError {
+  statusCode = 412;
   constructor(message: string) {
     super(message);
   }

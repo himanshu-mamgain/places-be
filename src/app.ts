@@ -1,12 +1,14 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import { NotFoundError } from "./utils/errors/NotFoundError";
-// import { routes } from "./routes";
+import errorHandler from "./utils/error.handler";
+import AppDataSource from "./config/db.config";
+import { routes } from "./routes";
 
 class App {
-  public app: Application;
+  public app: Express;
   constructor() {
     this.app = express();
     this.configureMiddlewares();
@@ -23,14 +25,15 @@ class App {
   }
 
   configureRoutes() {
-    // this.app.use("/api/v1", routes);
-    // this.app.use("*", (_req: Request, _res: Response, next: NextFunction) => {
-    //   return next(new NotFoundError('Route not found'));
-    // });
+    this.app.use("/api/v1", routes);
+    this.app.use("*", (_req: Request, _res: Response, next: NextFunction) => {
+      return next(new NotFoundError("Route not found"));
+    });
+    this.app.use(errorHandler);
   }
 
   async start(port: number) {
-    // await this.connectToDb();
+    await this.connectToDb();
 
     this.app.listen(port, () => {
       console.info("----------------------------------------------------");
@@ -40,7 +43,9 @@ class App {
     });
   }
 
-//   private async connectToDb() {}
+  private async connectToDb() {
+    await AppDataSource();
+  }
 }
 
 const app = new App();

@@ -1,4 +1,4 @@
-import { CustomApiError } from "./CusotmApiError";
+import { CustomApiError } from "./CustomApiError";
 
 export class InternalServerError extends CustomApiError {
   statusCode = 500;
