@@ -25,6 +25,8 @@ class UserService extends ResponseService implements IUserService {
         name,
         email,
         password: hashedPassword,
+        image:
+          "https://st.depositphotos.com/1023102/3424/i/450/depositphotos_34242715-stock-photo-taj-mahal-a-famous-historical.jpg",
       }).save();
 
       return this.serviceResponse(200, user, "User registered successfully");
