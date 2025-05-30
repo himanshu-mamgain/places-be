@@ -58,7 +58,7 @@ class UserService extends ResponseService implements IUserService {
 
         return this.serviceResponse(
           200,
-          { token },
+          { token, userId: userExist._id },
           "User logged in successfully"
         );
       } else {

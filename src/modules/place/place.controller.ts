@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import ResponseService from "../../utils/response.handler";
-import { ICreatePlace, IPlaceController, IUpdatePlace } from "./place.interface";
+import {
+  ICreatePlace,
+  IPlaceController,
+  IUpdatePlace,
+} from "./place.interface";
 import placeService from "./palce.service";
+import { IGetRequestUser } from "../../utils/interface";
 
 class PlaceController extends ResponseService implements IPlaceController {
   constructor(private readonly service = placeService) {
@@ -15,8 +20,11 @@ class PlaceController extends ResponseService implements IPlaceController {
   ): Promise<void> => {
     try {
       const data: ICreatePlace = req.payload;
+      const user: IGetRequestUser = req.user!;
+
       const { statusCode, payload, message } = await this.service.createPlace(
-        data
+        data,
+        user.id
       );
 
       this.sendResponse(res, statusCode, payload, message);
@@ -71,7 +79,6 @@ class PlaceController extends ResponseService implements IPlaceController {
       const { statusCode, payload, message } = await this.service.updatePlace(
         data
       );
-
       this.sendResponse(res, statusCode, payload, message);
     } catch (error) {
       next(error);

@@ -3,6 +3,7 @@ import { NotAuthorizedError } from "../utils/errors/NotAuthorizedError";
 import verifyJwt from "../utils/verifyJwt";
 import userModel from "../models/user.model";
 import { AccessForbiddenError } from "../utils/errors/AccessForbiddenError";
+import { Types } from "mongoose";
 
 export default function authorizer() {
   return async function (
@@ -29,7 +30,7 @@ export default function authorizer() {
       const decodedData = verifyJwt(tokenValue);
       const { id, name, email } = decodedData;
 
-      const user = await userModel.findOne({ id });
+      const user = await userModel.findOne({ _id: new Types.ObjectId(id) });
 
       if (!user) {
         throw new AccessForbiddenError("User not found");

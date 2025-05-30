@@ -1,22 +1,20 @@
 import Joi, { ObjectSchema } from "joi";
 import { ICreatePlace, IUpdatePlace } from "./place.interface";
-import { Types } from "mongoose";
 
 export const createPlaceSchema: ObjectSchema<ICreatePlace> =
   Joi.object<ICreatePlace>({
     title: Joi.string().required(),
     description: Joi.string().required(),
     address: Joi.string().required(),
-    creator: Joi.string().required(),
   });
 
-export const getPlaceByIdSchema: ObjectSchema<{ placeId: Types.ObjectId }> =
-  Joi.object<{ placeId: Types.ObjectId }>({
+export const getPlaceByIdSchema: ObjectSchema<{ placeId: string }> =
+  Joi.object<{ placeId: string }>({
     placeId: Joi.string().required(),
   });
 
-export const getPlaceByUserIdSchema: ObjectSchema<{ userId: Types.ObjectId }> =
-  Joi.object<{ userId: Types.ObjectId }>({
+export const getPlaceByUserIdSchema: ObjectSchema<{ userId: string }> =
+  Joi.object<{ userId: string }>({
     userId: Joi.string().required(),
   });
 
@@ -27,7 +25,7 @@ export const updatePlaceSchema: ObjectSchema<IUpdatePlace> =
     description: Joi.string().required(),
   });
 
-export const deletePlaceSchema: ObjectSchema<{ placeId: Types.ObjectId }> =
-  Joi.object<{ placeId: Types.ObjectId }>({
+export const deletePlaceSchema: ObjectSchema<{ placeId: string }> =
+  Joi.object<{ placeId: string }>({
     placeId: Joi.string().required(),
   });

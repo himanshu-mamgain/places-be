@@ -33,7 +33,27 @@ export interface ICreateToken {
 }
 
 export interface IGetRequestUser {
-  id: Types.ObjectId;
+  id: string;
   name: string;
   email: string;
+}
+
+export interface GeocodingResults {
+  geometry: IGeometry;
+}
+
+export interface IGeometry {
+  lat: number;
+  lng: number;
+}
+
+export interface IStatus {
+  code: number;
+  message: string;
+}
+
+export interface GeocodingResponse {
+  documentation: string;
+  results: GeocodingResults[];
+  status: IStatus;
 }

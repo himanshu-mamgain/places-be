@@ -11,19 +11,22 @@ class PlaceService extends ResponseService implements IPlaceService {
     super();
   }
 
-  createPlace = async (payload: ICreatePlace): Promise<IServiceResponse> => {
-    const { title, description, address, creator } = payload;
+  createPlace = async (
+    payload: ICreatePlace,
+    creatorId: string
+  ): Promise<IServiceResponse> => {
+    const { title, description, address } = payload;
 
     const corrdinates = await getCoordsFromAddress(address);
 
-    const newPlace = new placeModel({
+    const newPlace = await new placeModel({
       title,
       description,
       address,
       location: corrdinates,
       imageUrl:
         "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg",
-      creator,
+      creator: new Types.ObjectId(creatorId),
     }).save();
 
     return this.serviceResponse(
@@ -33,8 +36,10 @@ class PlaceService extends ResponseService implements IPlaceService {
     );
   };
 
-  getPlaceById = async (placeId: Types.ObjectId): Promise<IServiceResponse> => {
-    const place = placeModel.findById({ id: placeId });
+  getPlaceById = async (placeId: string): Promise<IServiceResponse> => {
+    const place = await placeModel.findOne({
+      _id: new Types.ObjectId(placeId),
+    });
 
     if (!place) {
       throw new BadRequestError("Could not find a place for the provided id");
@@ -43,13 +48,9 @@ class PlaceService extends ResponseService implements IPlaceService {
     return this.serviceResponse(200, place, "Place fetched successfully");
   };
 
-  getPlacesByUserId = async (
-    userId: Types.ObjectId
-  ): Promise<IServiceResponse> => {
+  getPlacesByUserId = async (userId: string): Promise<IServiceResponse> => {
     const userPlaces = await placeModel.find({
-      creator: {
-        id: userId,
-      },
+      creator: new Types.ObjectId(userId),
     });
 
     return this.serviceResponse(
@@ -62,7 +63,9 @@ class PlaceService extends ResponseService implements IPlaceService {
   updatePlace = async (payload: IUpdatePlace): Promise<IServiceResponse> => {
     const { placeId, title, description } = payload;
 
-    const placeExist = await placeModel.findOne({ id: placeId });
+    const placeExist = await placeModel.findOne({
+      _id: new Types.ObjectId(placeId),
+    });
 
     if (placeExist) {
       await placeModel.updateOne({
@@ -76,11 +79,13 @@ class PlaceService extends ResponseService implements IPlaceService {
     }
   };
 
-  deletePlace = async (placeId: Types.ObjectId): Promise<IServiceResponse> => {
-    const placeExist = await placeModel.findOne({ id: placeId });
+  deletePlace = async (placeId: string): Promise<IServiceResponse> => {
+    const placeExist = await placeModel.findOne({
+      _id: new Types.ObjectId(placeId),
+    });
 
     if (placeExist) {
-      await placeModel.deleteOne({ id: placeExist.id });
+      await placeModel.deleteOne({ _id: new Types.ObjectId(placeId) });
 
       return this.serviceResponse(200, {}, "Place deleted successfully");
     } else {

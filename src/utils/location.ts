@@ -1,25 +1,26 @@
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
 import { BadRequestError } from "./errors/BadRequestError";
+import { GeocodingResponse } from "./interface";
 
-const { GOOGLE_API_KEY } = process.env;
+const { GEOCODING_API_KEY } = process.env;
 
 export const getCoordsFromAddress = async (address: string) => {
   try {
     const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
         address
-      )}&key=${GOOGLE_API_KEY}`
+      )}&key=${GEOCODING_API_KEY}`
     );
 
-    const data = response.data;
+    const data: GeocodingResponse = response.data;
 
-    if (!data || data.status === "ZERO_RESULTS") {
+    if (!data || data.status.code !== 200) {
       throw new BadRequestError(
         "Could not find location for the specified address."
       );
     }
 
-    return data.results[0].geometry.location;
+    return data.results[0].geometry;
   } catch (error) {
     return error;
   }
