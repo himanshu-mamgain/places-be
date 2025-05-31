@@ -57,3 +57,8 @@ export interface GeocodingResponse {
   results: GeocodingResults[];
   status: IStatus;
 }
+
+export interface ICloudinaryResponse {
+  secureUrl: string;
+  url: string;
+}

@@ -1,4 +1,5 @@
 import userModel from "../../models/user.model";
+import { uploadFileToCloudinary } from "../../utils/cloudinary";
 import { BadRequestError } from "../../utils/errors/BadRequestError";
 import { generatePasswordHash, verifyPasswordHash } from "../../utils/hash";
 import { IServiceResponse } from "../../utils/interface";
@@ -24,11 +25,13 @@ class UserService extends ResponseService implements IUserService {
     if (!userExists) {
       const hashedPassword = await generatePasswordHash(password);
 
+      const uploadRes = await uploadFileToCloudinary(image?.path);
+
       const user = await new userModel({
         name,
         email,
         password: hashedPassword,
-        image: image?.path,
+        image: uploadRes?.secureUrl,
       }).save();
 
       return this.serviceResponse(200, user, "User registered successfully");

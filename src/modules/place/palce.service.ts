@@ -8,6 +8,7 @@ import { ICreatePlace, IPlaceService, IUpdatePlace } from "./place.interface";
 import { BadRequestError } from "../../utils/errors/BadRequestError";
 import { NotAuthorizedError } from "../../utils/errors/NotAuthorizedError";
 import userModel from "../../models/user.model";
+import { uploadFileToCloudinary } from "../../utils/cloudinary";
 
 class PlaceService extends ResponseService implements IPlaceService {
   constructor() {
@@ -30,12 +31,14 @@ class PlaceService extends ResponseService implements IPlaceService {
     } else {
       const corrdinates = await getCoordsFromAddress(address);
 
+      const uploadRes = await uploadFileToCloudinary(image?.path);
+
       const newPlace = await new placeModel({
         title,
         description,
         address,
         location: corrdinates,
-        imageUrl: image?.path,
+        imageUrl: uploadRes?.secureUrl,
         creator: new Types.ObjectId(creatorId),
       }).save();
 
