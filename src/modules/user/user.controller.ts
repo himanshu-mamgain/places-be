@@ -15,8 +15,11 @@ class UserController extends ResponseService implements IUserController {
   ): Promise<void> => {
     try {
       const data: IRegisterUser = req.payload;
+      const image: Express.Multer.File | undefined = req.file;
+      
       const { message, payload, statusCode } = await this.service.registerUser(
-        data
+        data,
+        image
       );
       this.sendResponse(res, statusCode, payload, message);
     } catch (error) {

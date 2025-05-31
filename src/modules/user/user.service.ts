@@ -1,3 +1,4 @@
+import fs from "fs";
 import userModel from "../../models/user.model";
 import { BadRequestError } from "../../utils/errors/BadRequestError";
 import { generatePasswordHash, verifyPasswordHash } from "../../utils/hash";
@@ -11,7 +12,10 @@ class UserService extends ResponseService implements IUserService {
     super();
   }
 
-  registerUser = async (payload: IRegisterUser) => {
+  registerUser = async (
+    payload: IRegisterUser,
+    image: Express.Multer.File | undefined
+  ) => {
     const { name, email, password } = payload;
 
     const userExists = await userModel.findOne({
@@ -21,12 +25,11 @@ class UserService extends ResponseService implements IUserService {
     if (!userExists) {
       const hashedPassword = await generatePasswordHash(password);
 
-      const user = new userModel({
+      const user = await new userModel({
         name,
         email,
         password: hashedPassword,
-        image:
-          "https://st.depositphotos.com/1023102/3424/i/450/depositphotos_34242715-stock-photo-taj-mahal-a-famous-historical.jpg",
+        image: image?.path,
       }).save();
 
       return this.serviceResponse(200, user, "User registered successfully");
