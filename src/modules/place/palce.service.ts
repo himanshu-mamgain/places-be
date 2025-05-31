@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import fs from "fs";
 import placeModel from "../../models/place.model";
 import { IServiceResponse } from "../../utils/interface";
 import { getCoordsFromAddress } from "../../utils/location";
@@ -86,6 +87,13 @@ class PlaceService extends ResponseService implements IPlaceService {
 
     if (placeExist) {
       await placeModel.deleteOne({ _id: new Types.ObjectId(placeId) });
+
+      // Delete image
+      fs.unlink(placeExist.imageUrl, (error) => {
+        if (error) {
+          console.error(error);
+        }
+      });
 
       return this.serviceResponse(200, {}, "Place deleted successfully");
     } else {
