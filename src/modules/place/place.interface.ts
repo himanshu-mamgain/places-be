@@ -9,8 +9,14 @@ export interface IPlaceService {
   ): Promise<IServiceResponse>;
   getPlaceById(placeId: string): Promise<IServiceResponse>;
   getPlacesByUserId(userId: string): Promise<IServiceResponse>;
-  updatePlace(payload: IUpdatePlace): Promise<IServiceResponse>;
-  deletePlace(placeId: string): Promise<IServiceResponse>;
+  updatePlace(
+    payload: IUpdatePlace,
+    userId: string | undefined
+  ): Promise<IServiceResponse>;
+  deletePlace(
+    placeId: string,
+    userId: string | undefined
+  ): Promise<IServiceResponse>;
 }
 
 export interface IPlaceController {

@@ -6,6 +6,8 @@ import { getCoordsFromAddress } from "../../utils/location";
 import ResponseService from "../../utils/response.handler";
 import { ICreatePlace, IPlaceService, IUpdatePlace } from "./place.interface";
 import { BadRequestError } from "../../utils/errors/BadRequestError";
+import { NotAuthorizedError } from "../../utils/errors/NotAuthorizedError";
+import userModel from "../../models/user.model";
 
 class PlaceService extends ResponseService implements IPlaceService {
   constructor() {
@@ -19,22 +21,33 @@ class PlaceService extends ResponseService implements IPlaceService {
   ): Promise<IServiceResponse> => {
     const { title, description, address } = payload;
 
-    const corrdinates = await getCoordsFromAddress(address);
+    const creator = await userModel.findOne({
+      _id: new Types.ObjectId(creatorId),
+    });
 
-    const newPlace = await new placeModel({
-      title,
-      description,
-      address,
-      location: corrdinates,
-      imageUrl: image?.path,
-      creator: new Types.ObjectId(creatorId),
-    }).save();
+    if (!creator) {
+      throw new BadRequestError("User not found");
+    } else {
+      const corrdinates = await getCoordsFromAddress(address);
 
-    return this.serviceResponse(
-      200,
-      { palce: newPlace },
-      "Place created successfully"
-    );
+      const newPlace = await new placeModel({
+        title,
+        description,
+        address,
+        location: corrdinates,
+        imageUrl: image?.path,
+        creator: new Types.ObjectId(creatorId),
+      }).save();
+
+      creator.places.push(newPlace._id);
+      await creator.save();
+
+      return this.serviceResponse(
+        200,
+        { place: newPlace },
+        "Place created successfully"
+      );
+    }
   };
 
   getPlaceById = async (placeId: string): Promise<IServiceResponse> => {
@@ -61,14 +74,21 @@ class PlaceService extends ResponseService implements IPlaceService {
     );
   };
 
-  updatePlace = async (payload: IUpdatePlace): Promise<IServiceResponse> => {
+  updatePlace = async (
+    payload: IUpdatePlace,
+    userId: string | undefined
+  ): Promise<IServiceResponse> => {
     const { placeId, title, description } = payload;
 
     const placeExist = await placeModel.findOne({
       _id: new Types.ObjectId(placeId),
     });
 
-    if (placeExist) {
+    if (placeExist && userId) {
+      if (placeExist.creator._id.toString() !== userId) {
+        throw new NotAuthorizedError("You are not allowed to edit the place.");
+      }
+
       await placeModel.updateOne({
         title,
         description,
@@ -80,12 +100,21 @@ class PlaceService extends ResponseService implements IPlaceService {
     }
   };
 
-  deletePlace = async (placeId: string): Promise<IServiceResponse> => {
+  deletePlace = async (
+    placeId: string,
+    userId: string | undefined
+  ): Promise<IServiceResponse> => {
     const placeExist = await placeModel.findOne({
       _id: new Types.ObjectId(placeId),
     });
 
-    if (placeExist) {
+    if (placeExist && userId) {
+      if (placeExist.creator._id.toString() !== userId) {
+        throw new NotAuthorizedError(
+          "You are not allowed to delete this place."
+        );
+      }
+
       await placeModel.deleteOne({ _id: new Types.ObjectId(placeId) });
 
       // Delete image

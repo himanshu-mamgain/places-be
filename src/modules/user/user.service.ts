@@ -1,4 +1,3 @@
-import fs from "fs";
 import userModel from "../../models/user.model";
 import { BadRequestError } from "../../utils/errors/BadRequestError";
 import { generatePasswordHash, verifyPasswordHash } from "../../utils/hash";
@@ -56,7 +55,7 @@ class UserService extends ResponseService implements IUserService {
             name: userExist.name,
             email: userExist.email,
           },
-          3
+          { expiresIn: "1h" }
         );
 
         return this.serviceResponse(

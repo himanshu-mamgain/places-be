@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,6 +18,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  places: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Place",
+      required: true,
+    },
+  ],
   createdAt: {
     type: String,
     required: false,

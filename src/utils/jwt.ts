@@ -4,11 +4,12 @@ import { PreconditionError } from "./errors/PreconditionError";
 
 const { JWT_SECRET } = process.env;
 
-export const createToken = (payload: ICreateToken, maxAge: number) => {
+export const createToken = (
+  payload: ICreateToken,
+  options?: jwt.SignOptions
+) => {
   if (JWT_SECRET) {
-    return jwt.sign(payload, JWT_SECRET, {
-      expiresIn: maxAge * 24 * 60 * 60,
-    });
+    return jwt.sign(payload, JWT_SECRET, options);
   }
 
   throw new PreconditionError("JWT_SECRET is missing");

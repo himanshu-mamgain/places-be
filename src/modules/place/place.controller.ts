@@ -77,9 +77,11 @@ class PlaceController extends ResponseService implements IPlaceController {
   ): Promise<void> => {
     try {
       const data: IUpdatePlace = req.payload;
+      const user: IGetRequestUser | undefined = req.user;
 
       const { statusCode, payload, message } = await this.service.updatePlace(
-        data
+        data,
+        user?.id
       );
       this.sendResponse(res, statusCode, payload, message);
     } catch (error) {
@@ -94,9 +96,11 @@ class PlaceController extends ResponseService implements IPlaceController {
   ): Promise<void> => {
     try {
       const { placeId } = req.payload;
+      const user: IGetRequestUser | undefined = req.user;
 
       const { statusCode, payload, message } = await this.service.deletePlace(
-        placeId
+        placeId,
+        user?.id
       );
 
       this.sendResponse(res, statusCode, payload, message);

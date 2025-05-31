@@ -23,7 +23,6 @@ router.post(
 
 router.get(
   "/user/:userId",
-  authorizer(),
   validatePayload(getPlaceByUserIdSchema),
   placeController.getPlacesByUserId
 );
