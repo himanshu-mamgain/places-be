@@ -9,12 +9,14 @@ import {
 } from "./place.validator";
 import placeController from "./place.controller";
 import authorizer from "../../middleware/authorizer";
+import fileUpload from "../../middleware/fileUpload";
 
 const router: Router = Router();
 
 router.post(
   "/",
   authorizer(),
+  fileUpload(),
   validatePayload(createPlaceSchema),
   placeController.createPlace
 );

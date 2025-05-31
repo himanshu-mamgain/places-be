@@ -13,7 +13,8 @@ class PlaceService extends ResponseService implements IPlaceService {
 
   createPlace = async (
     payload: ICreatePlace,
-    creatorId: string
+    creatorId: string,
+    image: Express.Multer.File | undefined
   ): Promise<IServiceResponse> => {
     const { title, description, address } = payload;
 
@@ -24,8 +25,7 @@ class PlaceService extends ResponseService implements IPlaceService {
       description,
       address,
       location: corrdinates,
-      imageUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg",
+      imageUrl: image?.path,
       creator: new Types.ObjectId(creatorId),
     }).save();
 

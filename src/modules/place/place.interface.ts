@@ -4,7 +4,8 @@ import { IServiceResponse } from "../../utils/interface";
 export interface IPlaceService {
   createPlace(
     payload: ICreatePlace,
-    creatorId: string
+    creatorId: string,
+    image: Express.Multer.File | undefined
   ): Promise<IServiceResponse>;
   getPlaceById(placeId: string): Promise<IServiceResponse>;
   getPlacesByUserId(userId: string): Promise<IServiceResponse>;

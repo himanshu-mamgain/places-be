@@ -21,10 +21,12 @@ class PlaceController extends ResponseService implements IPlaceController {
     try {
       const data: ICreatePlace = req.payload;
       const user: IGetRequestUser = req.user!;
+      const image: Express.Multer.File | undefined = req.file;
 
       const { statusCode, payload, message } = await this.service.createPlace(
         data,
-        user.id
+        user.id,
+        image
       );
 
       this.sendResponse(res, statusCode, payload, message);
